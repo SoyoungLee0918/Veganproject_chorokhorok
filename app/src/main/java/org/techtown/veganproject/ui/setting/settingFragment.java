@@ -1,4 +1,4 @@
-package org.techtown.veganproject.ui.send;
+package org.techtown.veganproject.ui.setting;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.techtown.veganproject.R;
 
-public class SendFragment extends Fragment {
+public class settingFragment extends Fragment {
 
-    private SendViewModel sendViewModel;
+    private settingViewModel settingViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        sendViewModel =
-                ViewModelProviders.of(this).get(SendViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_send, container, false);
+        settingViewModel =
+                ViewModelProviders.of(this).get(settingViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_setting, container, false);
         final TextView textView = root.findViewById(R.id.text_send);
-        sendViewModel.getText().observe(this, new Observer<String>() {
+        settingViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

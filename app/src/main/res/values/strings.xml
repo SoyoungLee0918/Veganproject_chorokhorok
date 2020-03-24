@@ -8,9 +8,10 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">메인화면</string>
-    <string name="menu_gallery">다이어리</string>
-    <string name="menu_slideshow">비건 지도 안내</string>
-    <string name="menu_tools">비건 레시피</string>
-    <string name="menu_share">설정 변경</string>
-    <string name="menu_send">Send</string>
+    <string name="menu_diary">다이어리</string>
+    <string name="menu_map">비건 지도 안내</string>
+    <string name="menu_barcode">비건 바코드</string>
+    <string name="menu_recipe">비건 레시피</string>
+    <string name="menu_setting">설정 변경</string>
+
 </resources>

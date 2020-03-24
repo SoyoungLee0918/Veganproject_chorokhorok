@@ -1,4 +1,4 @@
-package org.techtown.veganproject.ui.gallery;
+package org.techtown.veganproject.ui.diary;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,21 +10,22 @@ import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.techtown.veganproject.R;
 
-public class GalleryFragment extends Fragment {
+public class diaryFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private diaryViewModel diaryViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        diaryViewModel =
+                ViewModelProviders.of(this).get(diaryViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_diary, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
+        diaryViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

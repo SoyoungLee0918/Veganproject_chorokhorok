@@ -1,14 +1,14 @@
-package org.techtown.veganproject.ui.share;
+package org.techtown.veganproject.ui.recipe;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ShareViewModel extends ViewModel {
+public class recipeViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ShareViewModel() {
+    public recipeViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is share fragment");
     }
