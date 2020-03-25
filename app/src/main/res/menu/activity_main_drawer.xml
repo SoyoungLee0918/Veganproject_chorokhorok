@@ -27,7 +27,7 @@
 
     <item android:title="Setting">
         <menu>
-            <item android:title="설정 변경"
+            <item android:title="설정변경"
                 android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_menu_send" />
 
