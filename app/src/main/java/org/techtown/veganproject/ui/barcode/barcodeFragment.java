@@ -1,36 +1,87 @@
 package org.techtown.veganproject.ui.barcode;
 
+//package com.js.qrcodescanner;
+
+import android.app.Activity;
+import android.content.Intent;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProviders;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.techtown.veganproject.MainActivity;
 import org.techtown.veganproject.R;
 
-public class barcodeFragment extends Fragment {
+import static java.security.AccessController.getContext;
 
-    private barcodeViewModel barcodeViewModel;
+public class barcodeFragment extends AppCompatActivity {
+    //view Objects
+    private Button buttonScan;
+    private TextView textViewName, textViewAddress, textViewResult;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        barcodeViewModel =
-                ViewModelProviders.of(this).get(barcodeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_barcode, container, false);
-        final TextView textView = root.findViewById(R.id.text_tools);
-        barcodeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+    //qr code scanner object
+    private IntentIntegrator qrScan;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //View Objects
+        buttonScan = (Button) findViewById(R.id.buttonScan);
+        textViewName = (TextView) findViewById(R.id.textViewName);
+        textViewAddress = (TextView) findViewById(R.id.textViewAddress);
+        textViewResult = (TextView)  findViewById(R.id.textViewResult);
+
+        //intializing scan object
+        qrScan = new IntentIntegrator(this);
+
+        //button onClick
+        buttonScan.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //scan option
+                qrScan.setPrompt("Scanning...");
+                //qrScan.setOrientationLocked(false);
+                qrScan.initiateScan();
             }
         });
-        return root;
+    }
+
+    //Getting the scan results
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //qrcode 가 없으면
+            if (result.getContents() == null) {
+                Toast.makeText(barcodeFragment.this, "취소!", Toast.LENGTH_SHORT).show();
+            } else {
+                //qrcode 결과가 있으면
+                Toast.makeText(barcodeFragment.this, "스캔완료!", Toast.LENGTH_SHORT).show();
+                try {
+                    //data를 json으로 변환
+                    JSONObject obj = new JSONObject(result.getContents());
+                    textViewName.setText(obj.getString("name"));
+                    textViewAddress.setText(obj.getString("address"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    //Toast.makeText(MainActivity.this, result.getContents(), Toast.LENGTH_LONG).show();
+                    textViewResult.setText(result.getContents());
+                }
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
+
