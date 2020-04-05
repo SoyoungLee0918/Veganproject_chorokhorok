@@ -12,7 +12,7 @@
     <string name="menu_map">비건 지도 안내</string>
     <string name="menu_barcode">비건 바코드</string>
     <string name="menu_recipe">비건 레시피</string>
-    <string name="menu_setting">설정변경</string>
+    <string name="menu_setting">설정 변경</string>
     <string name="title_activity_veganmaps">Map</string>
 
 </resources>
