@@ -21,7 +21,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 
+import org.techtown.veganproject.ui.map.mapFragment;
+
 public class MainActivity extends AppCompatActivity {
+
+
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);

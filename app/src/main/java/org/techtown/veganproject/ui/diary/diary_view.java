@@ -12,4 +12,6 @@ import org.techtown.veganproject.R;
 public class diary_view extends AppCompatActivity {
 
 
+
+
 }

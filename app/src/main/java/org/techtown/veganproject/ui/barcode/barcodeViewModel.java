@@ -16,4 +16,6 @@ public class barcodeViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+
 }

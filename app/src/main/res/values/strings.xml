@@ -13,6 +13,13 @@
     <string name="menu_barcode">비건 바코드</string>
     <string name="menu_recipe">비건 레시피</string>
     <string name="menu_setting">설정 변경</string>
-    <string name="title_activity_veganmaps">Map</string>
+
+
+    <string name="barcode_name">바코드 이름</string>
+    <string name="barcode_url">URL</string>
+    <string name="barcode_number">코드 넘버</string>
+    <string name="barcode_scan">스캔</string>
+
+
 
 </resources>
