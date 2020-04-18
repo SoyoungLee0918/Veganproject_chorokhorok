@@ -30,47 +30,61 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.techtown.veganproject.R;
 
-public class mapFragment extends Fragment implements OnMapReadyCallback {
+public class mapFragment extends Fragment
+        implements OnMapReadyCallback
+{
+    private MapView mapView = null;
 
-    View rootView;
-    MapView mapView;
-
-    public mapFragment() {
+    public mapFragment()
+    {
+        // required
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        mapView = (MapView) rootView.findViewById(R.id.mapview);
-        mapView.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.fragment_map, container, false);
 
+        mapView = (MapView)layout.findViewById(R.id.map);
         mapView.getMapAsync(this);
 
-        return rootView;
+        return layout;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
     @Override
     public void onResume() {
-        mapView.onResume();
         super.onResume();
+        mapView.onResume();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
     }
 
     @Override
@@ -80,19 +94,45 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        MapsInitializer.initialize(this.getActivity());
-
-// Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(35.141233, 126.925594), 14);
-
-        googleMap.animateCamera(cameraUpdate);
-
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(35.141233, 126.925594))
-                .title("루프리코리아"));
-
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onLowMemory();
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        //액티비티가 처음 생성될 때 실행되는 함수
+
+        if(mapView != null)
+        {
+            mapView.onCreate(savedInstanceState);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng SEOUL = new LatLng(37.56, 126.97);
+
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        markerOptions.position(SEOUL);
+
+        markerOptions.title("서울");
+
+        markerOptions.snippet("수도");
+
+        googleMap.addMarker(markerOptions);
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+    }
+
 }
+
+
+
+
 
