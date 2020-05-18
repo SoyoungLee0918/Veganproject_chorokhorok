@@ -19,6 +19,7 @@
     <string name="barcode_url">URL</string>
     <string name="barcode_number">코드 넘버</string>
     <string name="barcode_scan">스캔</string>
+    <string name="PlacePicker"/>
 
 
 
