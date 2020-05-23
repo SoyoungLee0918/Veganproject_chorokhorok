@@ -18,6 +18,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        ////영상보면서 추가함
+        maven {url "https://jitpack.io"}
         
     }
 }
