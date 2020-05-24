@@ -71,12 +71,14 @@ import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.maps.android.data.kml.KmlLayer;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
 import org.techtown.veganproject.MainActivity;
 import org.techtown.veganproject.R;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -94,7 +96,7 @@ import static com.android.volley.VolleyLog.TAG;
 
 public class mapFragment extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    GoogleMap mMap;
     SupportMapFragment mapFragment1;
     SearchView searchView;
     View root;
@@ -125,7 +127,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-
 
 
 
@@ -259,7 +260,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
         getDeviceLocation();
 
-
+        addKML();
 
     }
     private void updateLocationUI() {
@@ -478,5 +479,20 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         mapFragment1.onDestroy();
     }
+
+
+
+////////////////////////////////////////////////////////
+public void addKML() {
+    KmlLayer layer = null;
+    try {
+        layer = new KmlLayer(mMap, R.raw.vegan_restaurant,getContext());
+    } catch (XmlPullParserException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    layer.addLayerToMap();
+}
 
 }
