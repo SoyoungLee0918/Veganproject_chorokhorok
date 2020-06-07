@@ -24,11 +24,14 @@ import androidx.lifecycle.ViewModelProviders;
 import org.techtown.veganproject.R;
 import org.techtown.veganproject.ui.diary.diaryViewModel;
 
+import java.util.Calendar;
+
 public class diaryFragment extends Fragment {
 
     private org.techtown.veganproject.ui.diary.diaryViewModel diaryViewModel;
     View root;
     Button viewBtn;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,12 +47,15 @@ public class diaryFragment extends Fragment {
         viewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getActivity(), diary_view.class);
                 startActivity(intent);
+
+
             }
         });
 
-        diaryViewModel.getText().observe(this, new Observer<String>() {
+        diaryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
 
@@ -57,5 +63,9 @@ public class diaryFragment extends Fragment {
         });
         return root;
     }
+
+    private void changeFragmentTextView() {
+    }
+
 
 }

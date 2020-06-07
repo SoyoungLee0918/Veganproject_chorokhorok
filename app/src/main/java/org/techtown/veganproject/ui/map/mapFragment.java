@@ -173,16 +173,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         if(mapFragment1 != null) {
             mapFragment1.onCreate(savedInstanceState);
         }
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -199,7 +189,8 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
                     Address address = addressesList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
                 }
                 return false;
             }
@@ -261,6 +252,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         getDeviceLocation();
 
         addKML();
+
 
     }
     private void updateLocationUI() {
@@ -326,6 +318,8 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         return addressStringBuilder.toString();
 
     }
+
+
     LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -347,6 +341,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
                 //현재 위치에 마커 생성하고 이동
                 setCurrentLocation(location, markerTitle, markerSnippet);
+
                 mCurrentLocatiion = location;
             }
         }

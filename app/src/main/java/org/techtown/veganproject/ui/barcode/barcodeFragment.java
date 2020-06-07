@@ -50,8 +50,8 @@ import static java.security.AccessController.getContext;
 
 
 public class barcodeFragment extends Fragment {
-    private static String IP_ADDRESS = "192.168.43.76";   //10.0.2.2  //192.168.200.102  //192.168.43.76
-    private static String TAG = "test100";
+    private static String IP_ADDRESS = "192.168.182.30";   //10.0.2.2  //192.168.200.102  //192.168.43.76
+    private static String TAG = "openapidata";
 
     private TextView mTextViewResult;
     private ArrayList<PersonalData> mArrayList;
