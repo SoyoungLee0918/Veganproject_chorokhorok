@@ -24,15 +24,19 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.CustomViewHo
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView id;
-        protected TextView name;
-        protected TextView country;
+        protected TextView barcode;
+        protected TextView img;
+        protected TextView vegantype;
+        protected TextView raw;
 
 
         public CustomViewHolder(View view) {
             super(view);
             this.id = (TextView) view.findViewById(R.id.textView_list_id);
-            this.name = (TextView) view.findViewById(R.id.textView_list_name);
-            this.country = (TextView) view.findViewById(R.id.textView_list_country);
+            this.barcode = (TextView) view.findViewById(R.id.textView_list_barcode);
+            this.img = (TextView) view.findViewById(R.id.textView_list_img);
+            this.vegantype = (TextView) view.findViewById(R.id.textView_list_vegantype);
+            this.raw = (TextView) view.findViewById(R.id.textView_list_raw);
         }
     }
 
@@ -49,8 +53,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.CustomViewHo
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
 
         viewholder.id.setText(mList.get(position).getMember_id());
-        viewholder.name.setText(mList.get(position).getMember_name());
-        viewholder.country.setText(mList.get(position).getMember_country());
+        viewholder.barcode.setText(mList.get(position).getMember_barcode());
+        viewholder.img.setText(mList.get(position).getMember_img());
+        viewholder.vegantype.setText(mList.get(position).getMember_vegantype());
+        viewholder.raw.setText(mList.get(position).getMember_raw());
     }
 
     @Override

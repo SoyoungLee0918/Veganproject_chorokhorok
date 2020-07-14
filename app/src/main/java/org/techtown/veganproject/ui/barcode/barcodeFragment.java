@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.techtown.veganproject.MainActivity;
 import org.techtown.veganproject.R;
+import org.techtown.veganproject.ui.diary.diary_view;
 //import org.techtown.veganproject.ui.barcode.barcodeViewModel;
 //import org.techtown.veganproject.ui.barcode.barcodeFragment;
 
@@ -50,8 +51,8 @@ import static java.security.AccessController.getContext;
 
 
 public class barcodeFragment extends Fragment {
-    private static String IP_ADDRESS = "192.168.182.30";   //10.0.2.2  //192.168.200.102  //192.168.43.76
-    private static String TAG = "openapidata";
+    private static String IP_ADDRESS = "192.168.182.31";   //10.0.2.2  //192.168.200.102  //192.168.43.76
+    private static String TAG = "haccpvegan";
 
     private TextView mTextViewResult;
     private ArrayList<PersonalData> mArrayList;
@@ -68,7 +69,7 @@ public class barcodeFragment extends Fragment {
     private Button buttonScan;
     private TextView textViewName, textViewAddress, textViewResult;
     private IntentIntegrator qrScan;
-
+    private Button productBtn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -97,9 +98,14 @@ public class barcodeFragment extends Fragment {
         mAdapter = new UsersAdapter(getActivity(), mArrayList);
         mRecyclerView.setAdapter(mAdapter);
 
+        //바코드 검색 버튼
         Button button_search = root.findViewById(R.id.button_main_search);
         button_search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                //이미지 보내기 예비
+               /* Intent intent = new Intent(getActivity(),barcodeimg.class);
+                Intent.putExtra("imgurl", );*/
 
                 mArrayList.clear();
                 mAdapter.notifyDataSetChanged();
@@ -112,7 +118,19 @@ public class barcodeFragment extends Fragment {
             }
         });
 
+        /*
+        //상품명으로 검색 버튼
+        productBtn = root.findViewById(R.id.button_product_name);
+        productBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), barcodeProduct.class);
+                startActivity(intent);
+            }
+        }); */
 
+
+        //스캔하기 버튼
         buttonScan = root.findViewById(R.id.buttonScan);
         qrScan = new IntentIntegrator(getActivity());     ///getActivity()가 관건
         mEditTextSearchKeyword = root.findViewById(R.id.editText_main_searchKeyword);
@@ -258,8 +276,10 @@ public class barcodeFragment extends Fragment {
 
         String TAG_JSON="webnautes";
         String TAG_ID = "prdlstNm";
-        String TAG_NAME = "barcode";
-        String TAG_COUNTRY ="rawmtrl";
+        String TAG_VEGANTYPE = "vegantype";
+        String TAG_BARCODE = "barcode";
+        String TAG_IMG ="imgurl1";
+        String TAG_RAW = "rawmtrl";
 
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
@@ -270,14 +290,18 @@ public class barcodeFragment extends Fragment {
                 JSONObject item = jsonArray.getJSONObject(i);
 
                 String id = item.getString(TAG_ID);
-                String name = item.getString(TAG_NAME);
-                String address = item.getString(TAG_COUNTRY);
+                String barcode = item.getString(TAG_BARCODE);
+                String vegantype = item.getString(TAG_VEGANTYPE);
+                String img = item.getString(TAG_IMG);
+                String raw = item.getString(TAG_RAW);
 
                 PersonalData personalData = new PersonalData();
 
                 personalData.setMember_id(id);
-                personalData.setMember_name(name);
-                personalData.setMember_country(address);
+                personalData.setMember_barcode(barcode);
+                personalData.setMember_vegantype(vegantype);
+                personalData.setMember_img(img);
+                personalData.setMember_raw(raw);
 
                 mArrayList.add(personalData);
                 mAdapter.notifyDataSetChanged();

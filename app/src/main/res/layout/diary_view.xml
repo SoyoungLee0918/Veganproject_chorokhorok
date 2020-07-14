@@ -3,64 +3,40 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/diary_date"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="date" />
+        android:layout_height="58dp">
 
-    <TextView
-        android:id="@+id/diary_view_title"
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/blackfast_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아침" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/lunch_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="점심" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/dinner_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저녁" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/dessert_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="간식" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="51dp"
-        android:text="diary title" />
-
-    <ImageView
-
-        android:id="@+id/user_image"
-
-        android:layout_width="match_parent"
-
-        android:layout_height="141dp"
-
-        android:layout_gravity="center"
-
-        android:adjustViewBounds="true"
-
-        android:maxWidth="200dp"
-
-        android:maxHeight="200dp"
+        android:layout_height="match_parent" />
 
 
-        android:onClick="onClick" />
-
-    <Button
-
-        android:id="@+id/btn_UploadPicture"
-
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-
-        android:layout_gravity="center"
-
-
-        android:onClick="onClick"
-
-        android:text="사진 선택"
-
-        android:textSize="15sp" />
-
-
-    <TextView
-        android:id="@+id/diary_view_content"
-        android:layout_width="match_parent"
-        android:layout_height="215dp"
-        android:text="diarycontent" />
-
-    <Button
-        android:id="@+id/diary_save_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="save" />
 </LinearLayout>
