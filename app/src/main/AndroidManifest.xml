@@ -38,7 +38,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBxj0S4y3HQDPsOSU8YtiGHMNc9HX6nwDM" />
-
         <activity
             android:name=".ui.map.mapFragment"
             android:label="@string/menu_map"></activity>
@@ -56,6 +55,21 @@
         <activity android:name=".ui.diary.diary_view" />
         <activity android:name=".ui.barcode.barcodeFragment"/>
 
+
+        <provider
+            android:authorities="veganproject.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepath"
+                />
+
+        </provider>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/> <!-- optional (needed if default theme has no action bar) -->
 
 
     </application>

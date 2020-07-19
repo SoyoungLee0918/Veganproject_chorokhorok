@@ -1,19 +1,25 @@
 package org.techtown.veganproject.ui.diary;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,13 +30,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.tabs.TabLayout;
-
+import org.techtown.veganproject.MainActivity;
 import org.techtown.veganproject.R;
 
 import java.io.BufferedOutputStream;
@@ -39,24 +43,36 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_NO_LOCALIZED_COLLATORS;
 
 
-public class blackfastFragment extends Fragment implements View.OnClickListener  {
+public class blackfastFragment extends Fragment implements View.OnClickListener {
+
     View root;
 
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_iMAGE = 2;
+
     private Uri mImageCaptureUri;
-
     private ImageView iv_UserPhoto;
-
-    private int id_view;
-
     private String absoultePath;
+    String fileName;   //  fileName - 돌고 도는 선택된 날짜의 파일 이름
+    String path_photo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/diary_image";
+    String imageFileName;
+    int flag = 0;
+    File directory = new File(path_photo);
+    File[] files = directory.listFiles();
+
+
 
     int cYear;
     int cMonth;
@@ -73,9 +89,9 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
     TextView viewDatePick;  //  viewDatePick - 선택한 날짜를 보여주는 textView
     EditText edtDiary;   //  edtDiary - 선택한 날짜의 일기를 쓰거나 기존에 저장된 일기가 있다면 보여주고 수정하는 영역
     Button btnSave;   //  btnSave - 선택한 날짜의 일기 저장 및 수정(덮어쓰기) 버튼
-    String fileName;   //  fileName - 돌고 도는 선택된 날짜의 파일 이름
 
 
+//    private DB_Manger dbmanger;
 
 
     @SuppressLint("WrongViewCast")
@@ -88,9 +104,9 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
         Bundle args = getArguments();
         if (args!=null) {
-             cYear = getArguments().getInt("year"); // 전달한 key 값
-             cMonth = getArguments().getInt("month");
-             cDay = getArguments().getInt("day");
+            cYear = getArguments().getInt("year"); // 전달한 key 값
+            cMonth = getArguments().getInt("month");
+            cDay = getArguments().getInt("day");
 
             // 전달한 key 값
             year = getArguments().getInt("s_year");
@@ -116,12 +132,20 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         //   dbmanger = new DB_Manger();
         iv_UserPhoto = (ImageView) this.root.findViewById(R.id.user_image);
 
-        Button btn_agreeJoin = (Button) root.findViewById(R.id.btn_UploadPicture);
-        btn_agreeJoin.setOnClickListener((View.OnClickListener) this);
+
+        checkDangerousPermissions();
+
+
+
+        Button btnUpload = (Button) root.findViewById(R.id.btn_UploadPicture);
+        btnUpload.setOnClickListener((View.OnClickListener)this);
 
         //checkedDay(cYear, cMonth, cDay);
 
         checkedDay(year, monthOfYear, dayOfMonth);
+
+        if(flag == 1)
+            setImage(imageFileName);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,8 +158,44 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         return root;
     }
 
+    //권한 위임 받기
+        private void checkDangerousPermissions () {
+            String[] permissions = {
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.ACCESS_NETWORK_STATE
+            };
+
+            int permissionCheck = PackageManager.PERMISSION_GRANTED;
+            for (int i = 0; i < permissions.length; i++) {
+                permissionCheck = ContextCompat.checkSelfPermission(getContext(), permissions[i]);
+                if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                    break;
+                }
+            }
+
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "권한 있음", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "권한 없음", Toast.LENGTH_LONG).show();
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+                    Toast.makeText(getContext(), "권한 설명 필요함", Toast.LENGTH_LONG).show();
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), permissions, 1);
+                }
+            }
+        }
+
+
+// 일기의 유무를 확인 후 저장된 일기를 불러오고 수정 혹은 작성시 파일 생성
     public void checkedDay(int year, int monthOfYear, int dayOfMonth) {
 
+        // 이미지 파일 이름 ( foodiary시간_ )
+        String timeStamp = year + "" + monthOfYear + "" + dayOfMonth ;
+        imageFileName = "diary_image" + timeStamp+"blackfast_";
 
         // 받은 날짜로 날짜 보여주는
         viewDatePick.setText(year + " - " + monthOfYear + " - " + dayOfMonth);
@@ -158,9 +218,11 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
             Toast.makeText(getContext(), "일기 써둔 날", Toast.LENGTH_SHORT).show();
             edtDiary.setText(str);
             btnSave.setText("수정하기");
+            flag = 1;
         } catch (Exception e) { // UnsupportedEncodingException , FileNotFoundException , IOException
             // 없어서 오류가 나면 일기가 없는 것 -> 일기를 쓰게 한다.
             Toast.makeText(getContext(), "일기 없는 날", Toast.LENGTH_SHORT).show();
+            flag = 0;
             edtDiary.setText("");
             btnSave.setText("새 일기 저장");
             e.printStackTrace();
@@ -178,9 +240,9 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
         // 임시로 사용할 파일의 경로를 생성
 
-        String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-
-        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
+        String url = "tmp_" + year + "" + monthOfYear + "" + dayOfMonth  + ".jpg";
+      //  Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+        mImageCaptureUri = Uri.fromFile(new File(Environment.getDataDirectory(), url));
 
 
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
@@ -224,7 +286,7 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
                 mImageCaptureUri = data.getData();
 
-                Log.d("SmartWheel", mImageCaptureUri.getPath().toString());
+                Log.d("volley", mImageCaptureUri.getPath().toString());
 
             }
 
@@ -280,10 +342,12 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
                 // CROP된 이미지를 저장하기 위한 FILE 경로
 
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                String filePath = Environment.getDataDirectory() +
 
-                        "/SmartWheel/" + System.currentTimeMillis() + ".jpg";
-                Log.d("파일경로.",filePath);
+                        "/diary_image/" + year + "" + monthOfYear + "" + dayOfMonth + "_" +".jpg";
+
+
+
 
                 if (extras != null) {
 
@@ -292,11 +356,12 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
                     iv_UserPhoto.setImageBitmap(photo); // 레이아웃의 이미지칸에 CROP된 BITMAP을 보여줌
 
 
-                    storeCropImage(photo, filePath); // CROP된 이미지를 외부저장소, 앨범에 저장한다.
-
-                    Log.d("파일이름은 이렇다.",fileName);
+                    storeCropImage(photo, filePath, imageFileName); // CROP된 이미지를 외부저장소, 앨범에 저장한다.
 
                     absoultePath = filePath;
+                    //Toast.makeText(getContext(), absoultePath, Toast.LENGTH_SHORT).show();
+
+                    //Toast.makeText(getContext(), "파일경로"+filePath, Toast.LENGTH_SHORT).show();
 
                     break;
 
@@ -379,18 +444,19 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
     }
 
     //사진 화면에 업로드 하는 함수
-    private void storeCropImage(Bitmap bitmap, String filePath) {
+    private void storeCropImage(Bitmap bitmap, String filePath, String FileName) {
 
         // SmartWheel 폴더를 생성하여 이미지를 저장하는 방식이다.
 
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SmartWheel";
+        File directory_image = new File(path_photo);
 
-        File directory_SmartWheel = new File(dirPath);
-
-
-        if (!directory_SmartWheel.exists()) // SmartWheel 디렉터리에 폴더가 없다면 (새로 이미지를 저장할 경우에 속한다.)
-
-            directory_SmartWheel.mkdirs();
+        //Toast.makeText(getContext(), "디렉토리 경로"+path_photo, Toast.LENGTH_SHORT).show();
+        if (!directory_image.exists()) // SmartWheel 디렉터리에 폴더가 없다면 (새로 이미지를 저장할 경우에 속한다.)
+           // Toast.makeText(getContext(), "해당 디렉토리가 없음", Toast.LENGTH_SHORT).show();
+            directory_image.mkdirs();
+        if (directory_image.exists()){
+        //Toast.makeText(getContext(),"디렉토리 생성", Toast.LENGTH_SHORT).show();
+            }
 
 
         File copyFile = new File(filePath);
@@ -401,7 +467,7 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         try {
 
 
-            copyFile.createNewFile();
+            copyFile=createImageFile(FileName);
 
             out = new BufferedOutputStream(new FileOutputStream(copyFile));
 
@@ -415,17 +481,16 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
                     Uri.fromFile(copyFile)));
 
 
+
             out.flush();
 
             out.close();
-
 
         } catch (Exception e) {
 
             e.printStackTrace();
 
         }
-
     }
 
     //다이어리 저장
@@ -437,9 +502,8 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         try {
             fos = getActivity().openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS); //MODE_WORLD_WRITEABLE
             String content = edtDiary.getText().toString();
+
             // String.getBytes() = 스트링을 배열형으로 변환?
-
-
             fos.write(content.getBytes());
             //fos.flush();
             fos.close();
@@ -454,13 +518,72 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
             Toast.makeText(getContext(), "오류오류", Toast.LENGTH_SHORT).show();
         }
     }
-  /*  public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, final Bundle savedInstanceState) {
+
+    //사진 파일을 생성하는 함수
+    public File createImageFile(String FileName) throws IOException {
+
+        // 이미지가 저장될 파일 이름 ( foodiary )
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/diary_image/");
+        if (!storageDir.exists()) storageDir.mkdirs();
+
+        // 빈 파일 생성
+        File image = File.createTempFile(FileName, ".jpg", storageDir);
+
+        Log.d("경로", "createImageFile : " + image.getAbsolutePath());
+
+        return image;
+    }
+
+    //사진 파일을 경로에 따라 불러와서 띄우는 함수
+   private void setImage(String Name) {
+       try {
+           /*
+           * for문 파일 리스트 크기만큼 돌려서
+           * 사진을 뷰페이저에 넣는거 만들기
+           * 리스틑 전역변수 지정한 거로 쓰기*/
+
+           String fileRealName = findFile(Name);
+           String path = path_photo + "/" + fileRealName;
+           Log.d("URI 경로: ", path);
+           Uri uri = getUriFromPath(path);
+           InputStream in = getActivity().getContentResolver().openInputStream(uri);
+           Bitmap bitmap = BitmapFactory.decodeStream(in);
+           iv_UserPhoto.setImageBitmap(bitmap);
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
+
+   }
+   //Name= 내가 찾으려는 파일 이름
+   public String findFile(String Name){
+        /*
+        * 1. File 리스트를 생성 --> 전역함수로 만들어라 그래야 위에서도 쓴다
+        * 2. for문을 돌려서 사진의 갯수만큼 리스트에 추가
+        *
+        */
+       List<String> filesNameList = new ArrayList<>();
+       String EndPic = null;
+
+       for (int i=0; i< files.length; i++) {
+           if(files[i].getName().contains(Name)) {
+               EndPic = files[i].getName();
+           }
+       }
+
+       return EndPic;
+   }
 
 
-        root = inflater.inflate(R.layout.fragment_blackfast, container, false);
+    public Uri getUriFromPath(String filePath) {
+        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, "_data = '" + filePath + "'", null, null);
 
-        return root;
-    }*/
+        cursor.moveToNext();
+        int id = cursor.getInt(cursor.getColumnIndex("_id"));
+        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+        return uri;
+    }
+
 
 }
