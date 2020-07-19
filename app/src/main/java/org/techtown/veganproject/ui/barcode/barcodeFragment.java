@@ -2,8 +2,13 @@ package org.techtown.veganproject.ui.barcode;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +31,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -40,6 +45,7 @@ import org.techtown.veganproject.ui.diary.diary_view;
 //import org.techtown.veganproject.ui.barcode.barcodeFragment;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -51,7 +57,7 @@ import static java.security.AccessController.getContext;
 
 
 public class barcodeFragment extends Fragment {
-    private static String IP_ADDRESS = "192.168.182.31";   //10.0.2.2  //192.168.200.102  //192.168.43.76
+    private static String IP_ADDRESS = "172.30.1.9";   //10.0.2.2  //192.168.200.102  //192.168.43.76
     private static String TAG = "haccpvegan";
 
     private TextView mTextViewResult;
@@ -60,6 +66,8 @@ public class barcodeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EditText mEditTextSearchKeyword;
     private String mJsonString;
+    ////
+    private ImageView imageView;
 
     private org.techtown.veganproject.ui.barcode.barcodeViewModel barcodeViewModel;
     View root;
@@ -70,6 +78,12 @@ public class barcodeFragment extends Fragment {
     private TextView textViewName, textViewAddress, textViewResult;
     private IntentIntegrator qrScan;
     private Button productBtn;
+
+
+
+
+    //아마도 이미지 URI일거임
+    String img;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -86,26 +100,26 @@ public class barcodeFragment extends Fragment {
         //});
 
 
-        mTextViewResult = root.findViewById(R.id.textView_main_result);
+        //mTextViewResult = root.findViewById(R.id.textView_main_result);
         mRecyclerView = root.findViewById(R.id.listView_main_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mEditTextSearchKeyword = root.findViewById(R.id.editText_main_searchKeyword);
 
-        mTextViewResult.setMovementMethod(new ScrollingMovementMethod());
+//        mTextViewResult.setMovementMethod(new ScrollingMovementMethod());
         mArrayList = new ArrayList<>();
 
         mAdapter = new UsersAdapter(getActivity(), mArrayList);
         mRecyclerView.setAdapter(mAdapter);
+
+        /////
+        imageView = root.findViewById(R.id.veganimg);
 
         //바코드 검색 버튼
         Button button_search = root.findViewById(R.id.button_main_search);
         button_search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                //이미지 보내기 예비
-               /* Intent intent = new Intent(getActivity(),barcodeimg.class);
-                Intent.putExtra("imgurl", );*/
 
                 mArrayList.clear();
                 mAdapter.notifyDataSetChanged();
@@ -117,17 +131,6 @@ public class barcodeFragment extends Fragment {
                 task.execute( "http://" + IP_ADDRESS + "/query.php", Keyword);
             }
         });
-
-        /*
-        //상품명으로 검색 버튼
-        productBtn = root.findViewById(R.id.button_product_name);
-        productBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), barcodeProduct.class);
-                startActivity(intent);
-            }
-        }); */
 
 
         //스캔하기 버튼
@@ -204,7 +207,7 @@ public class barcodeFragment extends Fragment {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            mTextViewResult.setText(result);
+//            mTextViewResult.setText(result);
             Log.d(TAG, "response - " + result);
 
             if (result == null){
@@ -292,7 +295,8 @@ public class barcodeFragment extends Fragment {
                 String id = item.getString(TAG_ID);
                 String barcode = item.getString(TAG_BARCODE);
                 String vegantype = item.getString(TAG_VEGANTYPE);
-                String img = item.getString(TAG_IMG);
+                img = item.getString(TAG_IMG);
+                Log.d("img", img);
                 String raw = item.getString(TAG_RAW);
 
                 PersonalData personalData = new PersonalData();

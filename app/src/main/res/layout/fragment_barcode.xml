@@ -68,29 +68,29 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_margin="5dp"
+        android:layout_margin="5sp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="0sp"
         android:layout_weight="6"
         android:id="@+id/listView_main_list" />
 
 
-    <!--- 디버깅 용 -->
-    <TextView
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
-        android:text="디버깅 용"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_main_debug" />
+    <!--    &lt;!&ndash;- 디버깅 용 &ndash;&gt;-->
+    <!--    <TextView-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:layout_marginBottom="5dp"-->
+    <!--        android:text="디버깅 용"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:id="@+id/textView_main_debug" />-->
 
-    <TextView
-        android:id="@+id/textView_main_result"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:layout_weight="1.5"
-        android:scrollbars="vertical"
-        android:textSize="8sp" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_main_result"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_margin="5dp"-->
+    <!--        android:layout_weight="1.5"-->
+    <!--        android:scrollbars="vertical"-->
+    <!--        android:textSize="8sp" />-->
 
 </LinearLayout>

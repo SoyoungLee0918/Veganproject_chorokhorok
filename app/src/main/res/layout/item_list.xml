@@ -2,16 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
+    android:layout_margin="5sp"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5sp">
+
+    <ImageView
+        android:id="@+id/veganimg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="40sp"
+        android:paddingBottom="15sp"
+        android:gravity="left"/>
 
     <TextView
         android:id="@+id/textView_list_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:layout_margin="5sp"
+        android:padding="5sp"
         android:textColor="#D500F9" />
 
 
@@ -19,38 +27,33 @@
         android:id="@+id/textView_list_barcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:layout_margin="5sp"
+        android:padding="5sp"
         android:textColor="#030303" />
 
     <TextView
         android:id="@+id/textView_list_vegantype"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:layout_margin="5sp"
+        android:padding="5sp"
         android:textColor="#00E676" />
 
-    <TextView
-        android:id="@+id/textView_list_img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:textSize="10sp" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_list_img"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="5dp"-->
+    <!--        android:padding="5dp"-->
+    <!--        android:textSize="10sp" />-->
 
     <TextView
         android:id="@+id/textView_list_raw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="5dp"
+        android:layout_margin="5sp"
+        android:padding="5sp"
         android:textSize="10sp" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        />
 
 </LinearLayout>
