@@ -54,6 +54,9 @@
         <activity android:name=".ui.diary.diary_edit" />
         <activity android:name=".ui.diary.diary_view" />
         <activity android:name=".ui.barcode.barcodeFragment"/>
+        <activity android:name=".ui.map.bookmarkFragment"/>
+
+
 
 
         <provider

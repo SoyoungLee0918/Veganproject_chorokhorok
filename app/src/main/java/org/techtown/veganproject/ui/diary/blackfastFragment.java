@@ -104,7 +104,7 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
         Bundle args = getArguments();
         if (args!=null) {
-            cYear = getArguments().getInt("year"); // 전달한 key 값
+           /* cYear = getArguments().getInt("year"); // 전달한 key 값
             cMonth = getArguments().getInt("month");
             cDay = getArguments().getInt("day");
 
@@ -112,10 +112,10 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
             year = getArguments().getInt("s_year");
             monthOfYear = getArguments().getInt("s_month");
             dayOfMonth = getArguments().getInt("s_day");
-            Log.d("WORKING HERE", "onCreateView: ");
+            Log.d("WORKING HERE", "onCreateView: ");*/
         }
 
-        Intent intent =getActivity().getIntent();
+       Intent intent =getActivity().getIntent();
         int cYear = intent.getExtras().getInt("year");
         int cMonth = intent.getExtras().getInt("month");
         int cDay = intent.getExtras().getInt("day");

@@ -57,7 +57,7 @@ public class diary_view extends AppCompatActivity{
         tab.setupWithViewPager(vp);
 
 
-        Intent intent =getIntent();
+        /*Intent intent =getIntent();
         int cYear = intent.getExtras().getInt("year");
         int cMonth = intent.getExtras().getInt("month");
         int cDay = intent.getExtras().getInt("day");
@@ -65,7 +65,7 @@ public class diary_view extends AppCompatActivity{
         int year = intent.getExtras().getInt("s_year");
         int monthOfYear = intent.getExtras().getInt("s_month");
         monthOfYear=monthOfYear+1;
-        int dayOfMonth = intent.getExtras().getInt("s_day");
+        int dayOfMonth = intent.getExtras().getInt("s_day");*/
 
        /* Bundle args = new Bundle();
         args.putInt("year",cYear);

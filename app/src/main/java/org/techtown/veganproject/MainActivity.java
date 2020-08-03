@@ -1,10 +1,14 @@
 package org.techtown.veganproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -25,7 +29,8 @@ import org.techtown.veganproject.ui.map.mapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private String fName;
+    private double lat, lon;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -34,17 +39,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+       /* Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+
+            //즐겨찾기에서 넘어 좌표
+            fName = bundle.getString("Name");
+            lat = bundle.getDouble("Lat");
+            lon = bundle.getDouble("Lon");
+
+            Log.d("이름", intent.getExtras().getString("Name"));
+            Log.d("경도", String.valueOf(intent.getExtras().getDouble("Lat")));
+            Log.d("위도", String.valueOf(intent.getExtras().getDouble("Lon")));
+
+            mapFragment fragment = new mapFragment();
+            bundle.putString("Name",fName);
+            bundle.putDouble("Lat",lat);
+            bundle.putDouble("Lon",lon);
+            fragment.setArguments(bundle);
+
+        }*/
+
+
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -65,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
