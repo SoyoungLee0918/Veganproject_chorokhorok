@@ -60,6 +60,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -78,9 +79,12 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.kml.KmlContainer;
 import com.google.maps.android.data.kml.KmlLayer;
 import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPoint;
+import com.google.maps.android.data.kml.KmlPolygon;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
@@ -117,6 +121,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback, GoogleM
      String fName;
      double lat, lon;
      Marker marker;
+     KmlLayer kmlLayer;
     String bookmark_location;
     Double bookmark_latitude;
     Double bookmark_longitude;
@@ -214,7 +219,6 @@ public class mapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
-
                 }
                 return false;
             }
@@ -263,22 +267,13 @@ public class mapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
 
 
+
+
+
         return root;
     }
 
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-        /*bookmark_location = marker.getTitle();
-        bookmark_latitude =marker.getPosition().latitude;
-        bookmark_longitude=marker.getPosition().longitude;
 
-        Log.d("마커 확인", String.valueOf(marker.getPosition().latitude));*/
-        Toast.makeText(getActivity(),marker.getTitle()+"\n"+marker.getPosition(),Toast.LENGTH_SHORT).show();
-
-
-
-        return false;
-    }
 
 
 
@@ -336,7 +331,13 @@ public class mapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
 
     }
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        get_coordinate(kmlLayer);
 
+
+        return true;
+    }
 
 
 
@@ -583,7 +584,14 @@ public class mapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 public void addKML() {
     KmlLayer layer = null;
     try {
-        layer = new KmlLayer(mMap, R.raw.vegan_restaurant,getContext());
+        layer = new KmlLayer(mMap, R.raw.vegan_restaurant, getContext());
+        layer.addLayerToMap();
+        layer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
+            @Override
+            public void onFeatureClick(Feature feature) {
+                //get_coordinate(kmlLayer);
+            }
+        });
 
 
     } catch (XmlPullParserException e) {
@@ -591,8 +599,42 @@ public void addKML() {
     } catch (IOException e) {
         e.printStackTrace();
     }
-    layer.addLayerToMap();;
+
+
+
+}
+
+public static void get_coordinate(KmlLayer kmlLayer) {
+    //KmlLayer kmlLayer =null;
+
+   /* for(KmlPlacemark placemark: kmlLayer.getPlacemarks())
+
+    {
+        if (placemark.getGeometry().getGeometryType().equals("Point")) {
+            KmlPoint point = (KmlPoint) placemark.getGeometry();
+            LatLng latLng_kml = new LatLng(point.getGeometryObject().latitude, point.getGeometryObject().longitude);
+            Log.d("마커 좌표", String.valueOf(latLng_kml));
+        }
+
+    }*/
+
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    KmlContainer container = kmlLayer.getContainers().iterator().next();
+    container = container.getContainers().iterator().next();
+    KmlPlacemark placemark = container.getPlacemarks().iterator().next();
+
+    KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+    for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
+        builder.include(latLng);
     }
+
+    Log.d("위치경도", String.valueOf(builder));
+};
+
+
+
+
+
 
 
 

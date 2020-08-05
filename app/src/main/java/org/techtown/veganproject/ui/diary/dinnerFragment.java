@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -31,6 +32,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +93,13 @@ public class dinnerFragment extends Fragment implements View.OnClickListener {
     EditText edtDiary;   //  edtDiary - 선택한 날짜의 일기를 쓰거나 기존에 저장된 일기가 있다면 보여주고 수정하는 영역
     Button btnSave;   //  btnSave - 선택한 날짜의 일기 저장 및 수정(덮어쓰기) 버튼
 
+    //--스탬프
+    private int ival;
+    public static int glob = 1;
+    static SharedPreferences sPref3;
+    private SharedPreferences.Editor sE;
+    RadioGroup rbMain;
+    RadioButton rb1, rb2, rb3, rb4, rb5, rb6;
 
 //    private DB_Manger dbmanger;
 
@@ -136,6 +146,74 @@ public class dinnerFragment extends Fragment implements View.OnClickListener {
         checkDangerousPermissions();
 
 
+        //--스탬프
+        rbMain = (RadioGroup) root.findViewById(R.id.rgMain);
+        rb1 = (RadioButton) root.findViewById(R.id.radio13);
+        rb2 = (RadioButton) root.findViewById(R.id.radio23);
+        rb3 = (RadioButton) root.findViewById(R.id.radio33);
+        rb4 = (RadioButton) root.findViewById(R.id.radio43);
+        rb5 = (RadioButton) root.findViewById(R.id.radio53);
+        rb6 = (RadioButton) root.findViewById(R.id.radio63);
+
+        final String timeStamp = year + "" + monthOfYear + "" + dayOfMonth + "dinner";
+        sPref3 = getActivity().getSharedPreferences(timeStamp, 0);
+        sE = sPref3.edit();
+        ival = sPref3.getInt(timeStamp, 0);
+
+        if (ival == R.id.radio13) {
+            rb1.setChecked(true);
+            glob = 1;
+        } else if (ival == R.id.radio23) {
+            rb2.setChecked(true);
+            glob = 2;
+        } else if (ival == R.id.radio33) {
+            rb3.setChecked(true);
+            glob = 3;
+        } else if (ival == R.id.radio43) {
+            rb4.setChecked(true);
+            glob = 4;
+        } else if (ival == R.id.radio53) {
+            rb5.setChecked(true);
+            glob = 5;
+        } else if (ival == R.id.radio63) {
+            rb6.setChecked(true);
+            glob = 6;
+        }
+
+        rbMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            int state = 0;
+
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio13) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio23) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio33) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio43) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio53) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio63) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                }
+
+            }
+        });
+
+
 
         Button btnUpload = (Button) root.findViewById(R.id.btn_UploadPicture);
         btnUpload.setOnClickListener((View.OnClickListener)this);
@@ -158,6 +236,37 @@ public class dinnerFragment extends Fragment implements View.OnClickListener {
         return root;
     }
 
+    @Override
+    public void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        String timeStamp = year + "" + monthOfYear + "" + dayOfMonth ;
+        sPref3 = getActivity().getSharedPreferences(timeStamp, 0);
+        sE = sPref3.edit();
+        ival = sPref3.getInt(timeStamp, 0);
+
+        if (ival == R.id.radio13) {
+            rb1.setChecked(true);
+            glob = 1;
+        } else if (ival == R.id.radio23) {
+            rb2.setChecked(true);
+            glob = 2;
+        } else if (ival == R.id.radio33) {
+            rb3.setChecked(true);
+            glob = 3;
+        } else if (ival == R.id.radio43) {
+            rb4.setChecked(true);
+            glob = 4;
+        } else if (ival == R.id.radio53) {
+            rb5.setChecked(true);
+            glob = 5;
+        } else if (ival == R.id.radio63) {
+            rb6.setChecked(true);
+            glob = 6;
+        }
+    }
+
+
     //권한 위임 받기
     private void checkDangerousPermissions () {
         String[] permissions = {
@@ -177,7 +286,8 @@ public class dinnerFragment extends Fragment implements View.OnClickListener {
         }
 
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), "권한 있음", Toast.LENGTH_LONG).show();
+           // Toast.makeText(getContext(), "권한 있음", Toast.LENGTH_LONG).show();
+            Log.d("권한 있음","");
         } else {
             Toast.makeText(getContext(), "권한 없음", Toast.LENGTH_LONG).show();
 

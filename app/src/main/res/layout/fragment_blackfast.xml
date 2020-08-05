@@ -72,7 +72,100 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="save" />
+
+        <RadioGroup
+            android:id="@+id/rgMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_margin="5dp"
+                android:text="비건"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/text_color"
+                android:elevation="4dp"
+                android:textSize="16dp"
+                ></RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_margin="5dp"
+                android:text="락토"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/text_color"
+                android:elevation="4dp"
+                android:textSize="16dp"
+                ></RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_margin="5dp"
+                android:text="락토오보"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/text_color"
+                android:elevation="4dp"
+                android:textSize="16dp"
+                ></RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_margin="5dp"
+                android:text="페스코"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/text_color"
+                android:elevation="4dp"
+                android:textSize="16dp"
+                ></RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_margin="5dp"
+                android:text="세미"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/text_color"
+                android:elevation="4dp"
+                android:textSize="16dp"
+                ></RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="9dp"
+                android:layout_margin="5dp"
+                android:text="논비건"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/text_color"
+                android:elevation="4dp"
+                android:textSize="16dp"
+                ></RadioButton>
+        </RadioGroup>
+
     </LinearLayout>
+
 
 
 </FrameLayout>

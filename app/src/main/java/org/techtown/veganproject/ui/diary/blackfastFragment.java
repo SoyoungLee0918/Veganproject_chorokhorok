@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -31,6 +32,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +77,6 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
     File[] files = directory.listFiles();
 
 
-
     int cYear;
     int cMonth;
     int cDay;
@@ -88,11 +91,27 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
     DatePicker datePicker;  //  datePicker - 날짜를 선택하는 달력
     TextView viewDatePick;  //  viewDatePick - 선택한 날짜를 보여주는 textView
     EditText edtDiary;   //  edtDiary - 선택한 날짜의 일기를 쓰거나 기존에 저장된 일기가 있다면 보여주고 수정하는 영역
+
     Button btnSave;   //  btnSave - 선택한 날짜의 일기 저장 및 수정(덮어쓰기) 버튼
 
+    //--스탬프
+    private int ival;
+    public static int glob = 1;
+    static SharedPreferences sPref;
+    private SharedPreferences.Editor sE;
+    RadioGroup rbMain;
+    RadioButton rb1, rb2, rb3, rb4, rb5, rb6;
 
 //    private DB_Manger dbmanger;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // 초기화 해야 하는 리소스들을 여기서 초기화 해준다.
+
+
+        Log.d("oncreate","");
+    }
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -104,7 +123,7 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
         Bundle args = getArguments();
         if (args!=null) {
-           /* cYear = getArguments().getInt("year"); // 전달한 key 값
+            cYear = getArguments().getInt("year"); // 전달한 key 값
             cMonth = getArguments().getInt("month");
             cDay = getArguments().getInt("day");
 
@@ -112,10 +131,10 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
             year = getArguments().getInt("s_year");
             monthOfYear = getArguments().getInt("s_month");
             dayOfMonth = getArguments().getInt("s_day");
-            Log.d("WORKING HERE", "onCreateView: ");*/
+            Log.d("WORKING HERE", "onCreateView: ");
         }
 
-       Intent intent =getActivity().getIntent();
+        Intent intent =getActivity().getIntent();
         int cYear = intent.getExtras().getInt("year");
         int cMonth = intent.getExtras().getInt("month");
         int cDay = intent.getExtras().getInt("day");
@@ -128,21 +147,90 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         datePicker = (DatePicker) root.findViewById(R.id.datePicker);
         viewDatePick = (TextView) root.findViewById(R.id.diary_date);
         edtDiary = (EditText) root.findViewById(R.id.diary_view_content);
+
         btnSave = (Button) root.findViewById(R.id.diary_save_btn);
         //   dbmanger = new DB_Manger();
         iv_UserPhoto = (ImageView) this.root.findViewById(R.id.user_image);
 
-
         checkDangerousPermissions();
+        checkedDay(year, monthOfYear, dayOfMonth);
 
+
+        //--스탬프
+        rbMain = (RadioGroup) root.findViewById(R.id.rgMain);
+        rb1 = (RadioButton) root.findViewById(R.id.radio1);
+        rb2 = (RadioButton) root.findViewById(R.id.radio2);
+        rb3 = (RadioButton) root.findViewById(R.id.radio3);
+        rb4 = (RadioButton) root.findViewById(R.id.radio4);
+        rb5 = (RadioButton) root.findViewById(R.id.radio5);
+        rb6 = (RadioButton) root.findViewById(R.id.radio6);
+
+        final String timeStamp = year + "" + monthOfYear + "" + dayOfMonth + "blackfast" ;
+        sPref = getActivity().getSharedPreferences(timeStamp, 0);
+        sE = sPref.edit();
+        ival = sPref.getInt(timeStamp, 0);
+
+        if (ival == R.id.radio1) {
+            rb1.setChecked(true);
+            glob = 1;
+        } else if (ival == R.id.radio2) {
+            rb2.setChecked(true);
+            glob = 2;
+        } else if (ival == R.id.radio3) {
+            rb3.setChecked(true);
+            glob = 3;
+        } else if (ival == R.id.radio4) {
+            rb4.setChecked(true);
+            glob = 4;
+        } else if (ival == R.id.radio5) {
+            rb5.setChecked(true);
+            glob = 5;
+        } else if (ival == R.id.radio6) {
+            rb6.setChecked(true);
+            glob = 6;
+        }
+
+        rbMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            int state = 0;
+
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio1) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio2) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio3) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio4) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio5) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                } else if (checkedId == R.id.radio6) {
+                    sE.clear();
+                    sE.putInt(timeStamp, checkedId);
+                    sE.apply();
+                }
+
+            }
+        });
 
 
         Button btnUpload = (Button) root.findViewById(R.id.btn_UploadPicture);
         btnUpload.setOnClickListener((View.OnClickListener)this);
 
-        //checkedDay(cYear, cMonth, cDay);
 
-        checkedDay(year, monthOfYear, dayOfMonth);
+
+
+
 
         if(flag == 1)
             setImage(imageFileName);
@@ -158,39 +246,72 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         return root;
     }
 
+    @Override
+    public void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        String timeStamp = year + "" + monthOfYear + "" + dayOfMonth ;
+        sPref = getActivity().getSharedPreferences(timeStamp, 0);
+        sE = sPref.edit();
+        ival = sPref.getInt(timeStamp, 0);
+
+        if (ival == R.id.radio1) {
+            rb1.setChecked(true);
+            glob = 1;
+        } else if (ival == R.id.radio2) {
+            rb2.setChecked(true);
+            glob = 2;
+        } else if (ival == R.id.radio3) {
+            rb3.setChecked(true);
+            glob = 3;
+        } else if (ival == R.id.radio4) {
+            rb4.setChecked(true);
+            glob = 4;
+        } else if (ival == R.id.radio5) {
+            rb5.setChecked(true);
+            glob = 5;
+        } else if (ival == R.id.radio6) {
+            rb6.setChecked(true);
+            glob = 6;
+        }
+    }
+
+
     //권한 위임 받기
-        private void checkDangerousPermissions () {
-            String[] permissions = {
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.ACCESS_NETWORK_STATE
-            };
+    private void checkDangerousPermissions () {
+        String[] permissions = {
+                Manifest.permission.INTERNET,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_NETWORK_STATE
+        };
 
-            int permissionCheck = PackageManager.PERMISSION_GRANTED;
-            for (int i = 0; i < permissions.length; i++) {
-                permissionCheck = ContextCompat.checkSelfPermission(getContext(), permissions[i]);
-                if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-                    break;
-                }
-            }
-
-            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "권한 있음", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getContext(), "권한 없음", Toast.LENGTH_LONG).show();
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
-                    Toast.makeText(getContext(), "권한 설명 필요함", Toast.LENGTH_LONG).show();
-                } else {
-                    ActivityCompat.requestPermissions(getActivity(), permissions, 1);
-                }
+        int permissionCheck = PackageManager.PERMISSION_GRANTED;
+        for (int i = 0; i < permissions.length; i++) {
+            permissionCheck = ContextCompat.checkSelfPermission(getContext(), permissions[i]);
+            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                break;
             }
         }
 
 
-// 일기의 유무를 확인 후 저장된 일기를 불러오고 수정 혹은 작성시 파일 생성
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+           // Toast.makeText(getContext(), "권한 있음", Toast.LENGTH_LONG).show();
+            Log.d("권한 있음","");
+        } else {
+            Toast.makeText(getContext(), "권한 없음", Toast.LENGTH_LONG).show();
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+                Toast.makeText(getContext(), "권한 설명 필요함", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), permissions, 1);
+            }
+        }
+    }
+
+
+    // 일기의 유무를 확인 후 저장된 일기를 불러오고 수정 혹은 작성시 파일 생성
     public void checkedDay(int year, int monthOfYear, int dayOfMonth) {
 
         // 이미지 파일 이름 ( foodiary시간_ )
@@ -241,7 +362,7 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
         // 임시로 사용할 파일의 경로를 생성
 
         String url = "tmp_" + year + "" + monthOfYear + "" + dayOfMonth  + ".jpg";
-      //  Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
         mImageCaptureUri = Uri.fromFile(new File(Environment.getDataDirectory(), url));
 
 
@@ -452,11 +573,11 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
 
         //Toast.makeText(getContext(), "디렉토리 경로"+path_photo, Toast.LENGTH_SHORT).show();
         if (!directory_image.exists()) // SmartWheel 디렉터리에 폴더가 없다면 (새로 이미지를 저장할 경우에 속한다.)
-           // Toast.makeText(getContext(), "해당 디렉토리가 없음", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getContext(), "해당 디렉토리가 없음", Toast.LENGTH_SHORT).show();
             directory_image.mkdirs();
         if (directory_image.exists()){
-        //Toast.makeText(getContext(),"디렉토리 생성", Toast.LENGTH_SHORT).show();
-            }
+            //Toast.makeText(getContext(),"디렉토리 생성", Toast.LENGTH_SHORT).show();
+        }
 
 
         File copyFile = new File(filePath);
@@ -503,6 +624,7 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
             fos = getActivity().openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS); //MODE_WORLD_WRITEABLE
             String content = edtDiary.getText().toString();
 
+
             // String.getBytes() = 스트링을 배열형으로 변환?
             fos.write(content.getBytes());
             //fos.flush();
@@ -535,43 +657,43 @@ public class blackfastFragment extends Fragment implements View.OnClickListener 
     }
 
     //사진 파일을 경로에 따라 불러와서 띄우는 함수
-   private void setImage(String Name) {
-       try {
-           /*
-           * for문 파일 리스트 크기만큼 돌려서
-           * 사진을 뷰페이저에 넣는거 만들기
-           * 리스틑 전역변수 지정한 거로 쓰기*/
+    private void setImage(String Name) {
+        try {
+            /*
+             * for문 파일 리스트 크기만큼 돌려서
+             * 사진을 뷰페이저에 넣는거 만들기
+             * 리스틑 전역변수 지정한 거로 쓰기*/
 
-           String fileRealName = findFile(Name);
-           String path = path_photo + "/" + fileRealName;
-           Log.d("URI 경로: ", path);
-           Uri uri = getUriFromPath(path);
-           InputStream in = getActivity().getContentResolver().openInputStream(uri);
-           Bitmap bitmap = BitmapFactory.decodeStream(in);
-           iv_UserPhoto.setImageBitmap(bitmap);
-       } catch (FileNotFoundException e) {
-           e.printStackTrace();
-       }
+            String fileRealName = findFile(Name);
+            String path = path_photo + "/" + fileRealName;
+            Log.d("URI 경로: ", path);
+            Uri uri = getUriFromPath(path);
+            InputStream in = getActivity().getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(in);
+            iv_UserPhoto.setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-   }
-   //Name= 내가 찾으려는 파일 이름
-   public String findFile(String Name){
+    }
+    //Name= 내가 찾으려는 파일 이름
+    public String findFile(String Name){
         /*
-        * 1. File 리스트를 생성 --> 전역함수로 만들어라 그래야 위에서도 쓴다
-        * 2. for문을 돌려서 사진의 갯수만큼 리스트에 추가
-        *
-        */
-       List<String> filesNameList = new ArrayList<>();
-       String EndPic = null;
+         * 1. File 리스트를 생성 --> 전역함수로 만들어라 그래야 위에서도 쓴다
+         * 2. for문을 돌려서 사진의 갯수만큼 리스트에 추가
+         *
+         */
+        List<String> filesNameList = new ArrayList<>();
+        String EndPic = null;
 
-       for (int i=0; i< files.length; i++) {
-           if(files[i].getName().contains(Name)) {
-               EndPic = files[i].getName();
-           }
-       }
+        for (int i=0; i< files.length; i++) {
+            if(files[i].getName().contains(Name)) {
+                EndPic = files[i].getName();
+            }
+        }
 
-       return EndPic;
-   }
+        return EndPic;
+    }
 
 
     public Uri getUriFromPath(String filePath) {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="vegantype">
+        <item>비건</item>
+        <item>락토</item>
+        <item>락토오보</item>
+        <item>페스코</item>
+        <item>세미</item>
+        <item>플렉시테리언</item>
+
+    </string-array>
+
+</resources>
