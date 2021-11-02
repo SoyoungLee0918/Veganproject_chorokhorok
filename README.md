@@ -1,5 +1,5 @@
-# Veganproject_chorokhorok
-비건 입문자를 위한 앱
+## Veganproject_chorokhorok
+#비건 입문자를 위한 앱
 1. 비건 다이어리 기능
   - 음식 사진 저장 + 내용 기록
   - 비건 일기 SNS 공유 기능
